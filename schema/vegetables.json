@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vegetables",
+  "title": "Vegetables Collection",
+  "description": "Master list of vegetables sold at Darsi Vegetable Shop. Collection: vegetables. Document ID: auto-generated Firestore ID.",
+  "type": "object",
+  "required": ["name_te", "name_en", "emoji", "unit", "active", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Firestore auto-generated document ID (not stored as a field, but referenced here for clarity)"
+    },
+    "name_te": {
+      "type": "string",
+      "description": "Vegetable name in Telugu script",
+      "example": "టమాట"
+    },
+    "name_en": {
+      "type": "string",
+      "description": "Vegetable name in English",
+      "example": "Tomato"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Single emoji representing the vegetable",
+      "example": "🍅"
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["kg", "bundle", "piece", "dozen"],
+      "description": "Default unit for buying/selling this vegetable"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["leafy", "gourd", "root", "fruit_veg", "flower", "bean", "other"],
+      "description": "Vegetable category for grouping in UI"
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Whether this vegetable is currently being sold",
+      "default": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — when this record was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — last updated"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name_te": "టమాట",
+      "name_en": "Tomato",
+      "emoji": "🍅",
+      "unit": "kg",
+      "category": "fruit_veg",
+      "active": true,
+      "created_at": "2026-06-20T00:00:00Z",
+      "updated_at": "2026-06-20T00:00:00Z"
+    }
+  ]
+}

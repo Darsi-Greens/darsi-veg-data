@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "prices",
+  "title": "Daily Prices Collection",
+  "description": "Buying (from vendor) and selling (to customer) prices per vegetable per day. Collection: prices. Document ID: {veg_id}_{YYYY-MM-DD} for easy querying.",
+  "type": "object",
+  "required": ["veg_id", "veg_name_en", "date", "buy_price", "sell_price", "unit", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Composite document ID — format: {veg_id}_{YYYY-MM-DD}, e.g. abc123_2026-06-20"
+    },
+    "veg_id": {
+      "type": "string",
+      "description": "Reference to vegetables/{id}"
+    },
+    "veg_name_en": {
+      "type": "string",
+      "description": "Denormalized vegetable name in English for faster reads"
+    },
+    "veg_name_te": {
+      "type": "string",
+      "description": "Denormalized vegetable name in Telugu for display"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Price date in YYYY-MM-DD format",
+      "example": "2026-06-20"
+    },
+    "buy_price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Price paid to vendor per unit (in INR)"
+    },
+    "sell_price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Price charged to customer per unit (in INR)"
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["kg", "bundle", "piece", "dozen"],
+      "description": "Unit for which buy/sell prices apply"
+    },
+    "margin": {
+      "type": "number",
+      "description": "Derived field: sell_price - buy_price (can be stored for quick access)"
+    },
+    "margin_pct": {
+      "type": "number",
+      "description": "Derived field: ((sell_price - buy_price) / buy_price) * 100"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — when price was set"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — last updated (price corrections)"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "abc123_2026-06-20",
+      "veg_id": "abc123",
+      "veg_name_en": "Tomato",
+      "veg_name_te": "టమాట",
+      "date": "2026-06-20",
+      "buy_price": 25,
+      "sell_price": 35,
+      "unit": "kg",
+      "margin": 10,
+      "margin_pct": 40,
+      "created_at": "2026-06-20T06:00:00Z",
+      "updated_at": "2026-06-20T06:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vendor_orders",
+  "title": "Vendor Orders Collection",
+  "description": "Daily incoming stock deliveries from vendors. Each document is one delivery from one vendor. Collection: vendor_orders. Document ID: Firestore auto-generated.",
+  "type": "object",
+  "required": ["vendor_id", "vendor_name", "order_date", "items", "total_amount", "payment_status", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Firestore auto-generated document ID"
+    },
+    "vendor_id": {
+      "type": "string",
+      "description": "Reference to vendors/{id}"
+    },
+    "vendor_name": {
+      "type": "string",
+      "description": "Denormalized vendor name for faster reads"
+    },
+    "order_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Delivery date in YYYY-MM-DD format",
+      "example": "2026-06-20"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Line items in this delivery",
+      "items": {
+        "type": "object",
+        "required": ["veg_id", "veg_name_en", "quantity", "unit", "buy_price", "line_total"],
+        "properties": {
+          "veg_id": {
+            "type": "string",
+            "description": "Reference to vegetables/{id}"
+          },
+          "veg_name_en": {
+            "type": "string",
+            "description": "Denormalized vegetable name"
+          },
+          "veg_name_te": {
+            "type": "string",
+            "description": "Denormalized Telugu name"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0.1,
+            "description": "Quantity received"
+          },
+          "unit": {
+            "type": "string",
+            "enum": ["kg", "bundle", "piece", "dozen"]
+          },
+          "buy_price": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Price paid per unit (in INR)"
+          },
+          "line_total": {
+            "type": "number",
+            "minimum": 0,
+            "description": "quantity × buy_price"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total_amount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Sum of all line_total values (in INR)"
+    },
+    "amount_paid": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Amount actually paid to vendor so far"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": ["pending", "partial", "paid"],
+      "description": "Payment status for this delivery",
+      "default": "pending"
+    },
+    "payment_mode": {
+      "type": "string",
+      "enum": ["cash", "upi", "credit"],
+      "description": "How payment was made (if paid)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes — quality issues, partial delivery, etc."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — when delivery was recorded"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — last updated (e.g. when payment made)"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "vendor_id": "vendor001",
+      "vendor_name": "Raju Vegetables",
+      "order_date": "2026-06-20",
+      "items": [
+        {
+          "veg_id": "abc123",
+          "veg_name_en": "Tomato",
+          "veg_name_te": "టమాట",
+          "quantity": 50,
+          "unit": "kg",
+          "buy_price": 25,
+          "line_total": 1250
+        },
+        {
+          "veg_id": "def456",
+          "veg_name_en": "Onion",
+          "veg_name_te": "ఉల్లిపాయ",
+          "quantity": 30,
+          "unit": "kg",
+          "buy_price": 20,
+          "line_total": 600
+        }
+      ],
+      "total_amount": 1850,
+      "amount_paid": 1850,
+      "payment_status": "paid",
+      "payment_mode": "cash",
+      "created_at": "2026-06-20T06:00:00Z",
+      "updated_at": "2026-06-20T06:00:00Z"
+    }
+  ]
+}
