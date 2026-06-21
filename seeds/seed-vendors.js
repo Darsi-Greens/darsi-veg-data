@@ -1,18 +1,20 @@
 /**
- * Seed script — adds 3 sample vendors to Firestore.
+ * Seed script — adds 3 vendors to Firestore with simplified schema.
  *
  * Usage:
  *   node seeds/seed-vendors.js --env=dev
  *   node seeds/seed-vendors.js --env=staging
  *   node seeds/seed-vendors.js --env=prod   (default)
+ *
+ * Add --force to overwrite existing vendors instead of skipping.
  */
 
 const admin = require("firebase-admin");
 const path  = require("path");
 
-// Parse --env flag
-const envArg = process.argv.find((a) => a.startsWith("--env="));
-const env    = envArg ? envArg.split("=")[1] : "prod";
+const envArg   = process.argv.find((a) => a.startsWith("--env="));
+const env      = envArg ? envArg.split("=")[1] : "prod";
+const force    = process.argv.includes("--force");
 
 const KEY_MAP = {
   dev:     "../../serviceAccountKey.dev.json",
@@ -35,36 +37,28 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+// Simplified schema — name, name_en, phone, area, active, created_at
 const VENDORS = [
   {
-    name: "Raju Vegetables",
-    phone: "9848012345",
-    area: "Darsi Market",
-    address: "Shop No. 12, Main Market Road, Darsi, Prakasam Dist.",
-    vegetables_supplied: [],
-    payment_terms: "daily_cash",
-    active: true,
-    notes: "Primary supplier. Arrives by 6 AM daily.",
+    name:    "రాజు",
+    name_en: "Raju",
+    phone:   "9848012345",
+    area:    "Darsi Market",
+    active:  true,
   },
   {
-    name: "Krishna Wholesale",
-    phone: "9701234567",
-    area: "Ongole APMC",
-    address: "APMC Yard, Ongole, Prakasam Dist.",
-    vegetables_supplied: [],
-    payment_terms: "weekly_credit",
-    active: true,
-    notes: "Leafy greens and root vegetables specialist. Weekly credit cycle.",
+    name:    "సురేష్",
+    name_en: "Suresh",
+    phone:   "9550123456",
+    area:    "Kandukur",
+    active:  true,
   },
   {
-    name: "Suresh Farm Fresh",
-    phone: "9550123456",
-    area: "Kandukur",
-    address: "NH-16, Kandukur, Prakasam Dist.",
-    vegetables_supplied: [],
-    payment_terms: "daily_cash",
-    active: true,
-    notes: "Local farmer — seasonal gourds and beans. Freshest stock.",
+    name:    "మురళి",
+    name_en: "Murali",
+    phone:   "9701234567",
+    area:    "Darsi",
+    active:  true,
   },
 ];
 
@@ -72,26 +66,30 @@ async function seedVendors() {
   const col = db.collection("vendors");
 
   const existing = await col.get();
-  if (!existing.empty) {
-    console.log(`⚠️   vendors already has ${existing.size} docs in ${serviceAccount.project_id}. Skipping.`);
-    console.log("    Delete the collection first to re-seed.");
+  if (!existing.empty && !force) {
+    console.log(`⚠️   vendors already has ${existing.size} docs in ${serviceAccount.project_id}.`);
+    console.log("    Use --force to delete and re-seed.");
     process.exit(0);
+  }
+
+  if (!existing.empty && force) {
+    console.log(`🗑️   Deleting ${existing.size} existing vendor docs...`);
+    const delBatch = db.batch();
+    existing.docs.forEach((d) => delBatch.delete(d.ref));
+    await delBatch.commit();
   }
 
   const now   = admin.firestore.FieldValue.serverTimestamp();
   const batch = db.batch();
-  VENDORS.forEach((vendor) => batch.set(col.doc(), { ...vendor, created_at: now, updated_at: now }));
+  VENDORS.forEach((v) => batch.set(col.doc(), { ...v, created_at: now, updated_at: now }));
 
   await batch.commit();
   console.log(`✅  Seeded ${VENDORS.length} vendors → ${serviceAccount.project_id}`);
+  VENDORS.forEach((v) => console.log(`   • ${v.name} (${v.name_en}) — ${v.area}`));
   process.exit(0);
 }
 
 seedVendors().catch((err) => {
   console.error("❌  Seed failed:", err.message ?? err);
-  if (err.code === 5) {
-    console.error("    Firestore may not be enabled for this project.");
-    console.error(`    Go to: https://console.firebase.google.com/project/${serviceAccount.project_id}/firestore`);
-  }
   process.exit(1);
 });
