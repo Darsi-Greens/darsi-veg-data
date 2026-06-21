@@ -37,27 +37,30 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-// Simplified schema — name, name_en, phone, area, active, created_at
+// Bilingual schema — name/area in Telugu + English
 const VENDORS = [
   {
     name:    "రాజు",
     name_en: "Raju",
+    area:    "దర్సి మార్కెట్",
+    area_en: "Darsi Market",
     phone:   "9848012345",
-    area:    "Darsi Market",
     active:  true,
   },
   {
     name:    "సురేష్",
     name_en: "Suresh",
+    area:    "కందుకూరు",
+    area_en: "Kandukur",
     phone:   "9550123456",
-    area:    "Kandukur",
     active:  true,
   },
   {
     name:    "మురళి",
     name_en: "Murali",
-    phone:   "9701234567",
-    area:    "Darsi",
+    area:    "దర్సి",
+    area_en: "Darsi",
+    phone:   "9876543210",
     active:  true,
   },
 ];
