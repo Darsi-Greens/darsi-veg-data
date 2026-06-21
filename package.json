@@ -1,0 +1,20 @@
+{
+  "name": "darsi-veg-data",
+  "version": "1.0.0",
+  "description": "Firestore schema, seed data, and migrations for Darsi Greens",
+  "private": true,
+  "scripts": {
+    "seed:dev": "node seeds/seed-vegetables.js --env=dev && node seeds/seed-vendors.js --env=dev",
+    "seed:staging": "node seeds/seed-vegetables.js --env=staging && node seeds/seed-vendors.js --env=staging",
+    "seed:prod": "node seeds/seed-vegetables.js --env=prod && node seeds/seed-vendors.js --env=prod",
+    "seed:vegetables": "node seeds/seed-vegetables.js",
+    "seed:vendors": "node seeds/seed-vendors.js",
+    "seed:vegetables:dev": "node seeds/seed-vegetables.js --env=dev",
+    "seed:vendors:dev": "node seeds/seed-vendors.js --env=dev",
+    "seed:vegetables:staging": "node seeds/seed-vegetables.js --env=staging",
+    "seed:vendors:staging": "node seeds/seed-vendors.js --env=staging"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
