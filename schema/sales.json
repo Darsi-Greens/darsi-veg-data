@@ -73,6 +73,16 @@
       "type": "string",
       "description": "Optional free-text note on the transaction"
     },
+    "credit_paid": {
+      "type": "boolean",
+      "description": "For credit sales: true once customer has paid. Default false.",
+      "default": false
+    },
+    "credit_paid_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Firestore Timestamp — when credit was collected (null until paid)"
+    },
     "created_at": {
       "type": "string",
       "format": "date-time",

@@ -22,10 +22,15 @@
       "type": "string",
       "description": "Denormalized vegetable name in Telugu"
     },
+    "type": {
+      "type": "string",
+      "enum": ["in", "out", "adjustment", "wastage", "return", "carry_over"],
+      "description": "Stock movement type: in=received from vendor, out=sold, adjustment=manual correction, wastage=spoiled/discarded, carry_over=opening stock from previous day"
+    },
     "movement_type": {
       "type": "string",
-      "enum": ["in", "out", "adjustment", "wastage", "return"],
-      "description": "Direction of stock movement: in=received from vendor, out=sold to customer, adjustment=manual correction, wastage=spoiled/discarded, return=returned to vendor"
+      "enum": ["in", "out", "adjustment", "wastage", "return", "carry_over"],
+      "description": "Deprecated alias for type — use type field"
     },
     "quantity": {
       "type": "number",

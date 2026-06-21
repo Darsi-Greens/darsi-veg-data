@@ -76,6 +76,22 @@
       "type": "string",
       "description": "veg_name_en of the best-selling vegetable by revenue today"
     },
+    "customer_count": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Number of customers who visited today (entered via +/- counter in Analytics)",
+      "default": 0
+    },
+    "total_expenses": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Sum of all daily_expenses for this date (fuel, bags, labour, etc.)",
+      "default": 0
+    },
+    "net_profit": {
+      "type": "number",
+      "description": "total_sales_amount - total_buy_amount - total_expenses - total_wastage_amount"
+    },
     "status": {
       "type": "string",
       "enum": ["draft", "finalized"],

@@ -4,7 +4,7 @@
   "title": "Vendor Orders Collection",
   "description": "Daily incoming stock deliveries from vendors. Each document is one delivery from one vendor. Collection: vendor_orders. Document ID: Firestore auto-generated.",
   "type": "object",
-  "required": ["vendor_id", "vendor_name", "order_date", "items", "total_amount", "payment_status", "created_at"],
+  "required": ["vendor_id", "vendor_name", "order_date", "items", "total_amount", "status", "payment_status", "placed_at", "created_at"],
   "properties": {
     "id": {
       "type": "string",
@@ -92,10 +92,26 @@
       "type": "string",
       "description": "Optional notes — quality issues, partial delivery, etc."
     },
+    "status": {
+      "type": "string",
+      "enum": ["placed", "received"],
+      "description": "Order lifecycle: placed=order made with vendor, received=stock arrived",
+      "default": "placed"
+    },
+    "placed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Firestore Timestamp — when order was placed with vendor"
+    },
+    "received_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Firestore Timestamp — when stock was physically received (null until toggled)"
+    },
     "created_at": {
       "type": "string",
       "format": "date-time",
-      "description": "Firestore Timestamp — when delivery was recorded"
+      "description": "Firestore Timestamp — when record was created in app"
     },
     "updated_at": {
       "type": "string",
