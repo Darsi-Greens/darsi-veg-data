@@ -113,6 +113,20 @@
       "format": "date-time",
       "description": "Firestore Timestamp — when record was created in app"
     },
+    "paid_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Firestore Timestamp — when payment was made (null until paid)"
+    },
+    "receipt_url": {
+      "type": ["string", "null"],
+      "description": "Firebase Storage download URL for the receipt photo"
+    },
+    "receipt_uploaded_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Firestore Timestamp — when receipt photo was uploaded"
+    },
     "updated_at": {
       "type": "string",
       "format": "date-time",
